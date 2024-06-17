@@ -1,23 +1,38 @@
 const canvasSketch = require('canvas-sketch');
 
 const settings = {
-  dimensions: 'A4',
-  pixelsPerInch: 300
+  dimensions: [2048, 2048],
 };
 
 const sketch = () => {
+  const createGrid = () => {
+    const points = [];
+    const count = 5;
+    for (let i = 0; i < count; i++) {
+      for (let j = 0; j < count; j++) {
+        const u = count < 1 ? 0.5 : i / (count - 1);
+        const v = count < 1 ? 0.5 : j / (count - 1);
+        points.push([u, v]);
+      }
+    }
+    return points;
+  };
+
+  const points = createGrid();
+
   return ({ context, width, height }) => {
-    context.fillStyle = 'pink';
+    context.fillStyle = 'white';
     context.fillRect(0, 0, width, height);
+    points.forEach(([u, v]) => {
+      const x = u * width;
+      const y = v * height;
 
-    context.beginPath();
-    context.arc(width/2, height/2, 300, 0, Math.PI * 2, false);
-    context.fillStyle = 'violet';
-    context.fill();
-
-    context.lineWidth = 30;
-    context.strokeStyle = 'purple';
-    context.stroke();
+      context.beginPath();
+      context.arc(x, y, 100, 0, Math.PI * 2, false);
+      context.strokeStyle = 'black';
+      context.lineWidth = 30;
+      context.stroke();
+    });
   };
 };
 
