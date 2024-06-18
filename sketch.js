@@ -9,12 +9,15 @@ const settings = {
 const sketch = () => {
   const createGrid = () => {
     const points = [];
-    const count = 40;
+    const count = 25;
     for (let i = 0; i < count; i++) {
       for (let j = 0; j < count; j++) {
         const u = count < 1 ? 0.5 : i / (count - 1);
         const v = count < 1 ? 0.5 : j / (count - 1);
-        points.push([u, v]);
+        points.push({
+          position: [u, v],
+          radius: Math.abs(0.01 + random.gaussian() * 0.01),
+        });
       }
     }
     return points;
@@ -27,15 +30,19 @@ const sketch = () => {
   return ({ context, width, height }) => {
     context.fillStyle = 'white';
     context.fillRect(0, 0, width, height);
-    points.forEach(([u, v]) => {
+    points.forEach((data) => {
+      const {
+        position,
+        radius
+      } = data;
+      const [u, v] = position;
       const x = lerp(margin, width - margin, u);
       const y = lerp(margin, height - margin, v);
 
       context.beginPath();
-      context.arc(x, y, 5, 0, Math.PI * 2, false);
-      context.strokeStyle = 'black';
-      context.lineWidth = 20;
-      context.stroke();
+      context.arc(x, y, radius * width, 0, Math.PI * 2, false);
+      context.fillStyle = 'purple';
+      context.fill();
     });
   };
 };
